@@ -145,6 +145,9 @@ class KchControlDaemon(StateConsumer):
         if message.status == MetadataManagerMessage.Status.RUNNING:
             if message.metadata.mode == RobotMode.COMP:
                 GPIO.output(AstoriaLEDs.COMP, GPIO.HIGH)
+            else:
+                GPIO.output(AstoriaLEDs.COMP, GPIO.LOW)
+            return
         GPIO.output(AstoriaLEDs.COMP, GPIO.LOW)
 
     async def handle_astprocd_message(

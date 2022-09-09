@@ -1,0 +1,30 @@
+# Astoria Default Config File
+
+[mqtt]
+host = "::1"
+port = 1883
+enable_tls = false
+force_protocol_version_3_1 = true
+
+topic_prefix = "astoria"
+
+[wifi]
+interface = "wlan0"
+bridge = "br0"
+enable_wpa3 = false
+
+[astdiskd]
+ignored_mounts = [
+    "/",
+    "/boot",
+    "/boot/efi",
+]
+
+[astprocd]
+default_usercode_entrypoint = "robot.py"
+
+[system]
+cache_dir = ".cache_dir"  # Use a directory in /var for production
+
+[env]
+EXAMPLE_ENV_VAR=123

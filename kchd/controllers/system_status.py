@@ -8,12 +8,14 @@ from astoria.common.ipc import ManagerMessage
 from astoria.common.mqtt.wrapper import MQTTWrapper
 from pydantic import ValidationError, parse_obj_as
 
-from .hardware import KCHLED
+from kchd.hardware import KCHLED
+
+from .controller import LEDController
 
 LOGGER = logging.getLogger(__name__)
 
 
-class SystemStatusController:
+class SystemStatusController(LEDController):
     """
     LED Controller for the System Status.
 

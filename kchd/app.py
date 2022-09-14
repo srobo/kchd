@@ -31,7 +31,6 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
     def _init(self) -> None:
         self._kch_info = get_kch_info()
         self._lock = asyncio.Lock()
-        self._gpio = GPIOController()
 
         self._controllers: ControllerDictionary = {
             "astmetad": AstmetadController(self._mqtt, self.update_leds),
@@ -39,6 +38,12 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             "mqtt": MQTTRequestController(self._mqtt, self.update_leds),
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }
+
+        leds = set().union(*[
+            controller.leds  # type: ignore[attr-defined]
+            for controller in self._controllers.values()
+        ])
+        self._gpio = GPIOController(leds)
 
         self._register_request(
             "user_leds",

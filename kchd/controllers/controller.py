@@ -24,7 +24,7 @@ class LEDController(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def _leds(self) -> List[KCHLED]:
+    def leds(self) -> List[KCHLED]:
         """The LEDs that this controller is responsible for."""
         raise NotImplementedError  # pragma: nocover
 

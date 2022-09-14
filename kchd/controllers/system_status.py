@@ -32,7 +32,7 @@ class SystemStatusController(LEDController):
     required astoria managers are running, it will turn on an LED.
     """
 
-    _leds = [
+    leds = [
         KCHLED.BOOT_20,
         KCHLED.BOOT_40,
         KCHLED.BOOT_60,
@@ -100,5 +100,5 @@ class SystemStatusController(LEDController):
         leds_on = self.get_enabled_leds() + 2
         return {
             led: leds_on >= i + 1
-            for i, led in enumerate(self._leds)
+            for i, led in enumerate(self.leds)
         }

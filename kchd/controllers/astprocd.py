@@ -23,7 +23,7 @@ class AstprocdController(LEDController):
     It determines the state of the LEDs based on the astprocd state.
     """
 
-    _leds = [KCHLED.STATUS_RED, KCHLED.STATUS_GREEN, KCHLED.STATUS_BLUE, KCHLED.CODE]
+    leds = [KCHLED.STATUS_RED, KCHLED.STATUS_GREEN, KCHLED.STATUS_BLUE, KCHLED.CODE]
 
     def __init__(
         self,

@@ -19,7 +19,7 @@ class KCHLED(enum.IntEnum):
     CODE = 11
     COMP = 16
 
-    # HEARTBEAT = 19
+    HEARTBEAT = 19
 
     STATUS_RED = 26
     STATUS_GREEN = 20

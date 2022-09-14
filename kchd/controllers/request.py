@@ -21,7 +21,7 @@ class MQTTRequestController(LEDController):
     It determines the state of the LEDs based on the requested state.
     """
 
-    _leds = [
+    leds = [
         KCHLED.USER_A_RED,
         KCHLED.USER_A_GREEN,
         KCHLED.USER_A_BLUE,

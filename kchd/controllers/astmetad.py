@@ -23,7 +23,7 @@ class AstmetadController(LEDController):
     It determines the state of the LEDs based on the astmetad state.
     """
 
-    _leds = [KCHLED.COMP]
+    leds = [KCHLED.COMP]
 
     def __init__(
         self,

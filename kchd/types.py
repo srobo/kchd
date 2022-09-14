@@ -1,7 +1,9 @@
 """Type definitions."""
 from typing import TYPE_CHECKING, Tuple, TypedDict
+from uuid import UUID
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest
+from pydantic import BaseModel
 
 if TYPE_CHECKING:
     from .controllers import (
@@ -10,6 +12,15 @@ if TYPE_CHECKING:
         MQTTRequestController,
         SystemStatusController,
     )
+
+
+class KCHInfo(BaseModel):
+    """Information about the KCH."""
+
+    vendor: str
+    product: str
+    asset_code: str
+    uuid: UUID
 
 
 class KCHManagerMessage(ManagerMessage):

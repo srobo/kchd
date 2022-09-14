@@ -1,22 +1,13 @@
+"""Get information about the KCH."""
 from pathlib import Path
-from uuid import UUID
 
-from pydantic import BaseModel
+from .types import KCHInfo
 
 DEVICE_TREE_SYS_PATH = Path("/sys/firmware/devicetree/base/hat")
 
 
 class NoKCHException(Exception):
     """There is no KCH on the Pi."""
-
-
-class KCHInfo(BaseModel):
-    """Information about the KCH."""
-
-    vendor: str
-    product: str
-    asset_code: str
-    uuid: UUID
 
 
 def _read_file(path: Path) -> str:

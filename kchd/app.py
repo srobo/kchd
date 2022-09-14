@@ -55,6 +55,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
         """Main loop and entrypoint."""
         self.status = KCHManagerMessage(
             status=KCHManagerMessage.Status.RUNNING,
+            kch=self._kch_info,
         )
         await self.wait_loop()
 

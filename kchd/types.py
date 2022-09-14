@@ -1,5 +1,5 @@
 """Type definitions."""
-from typing import TYPE_CHECKING, Tuple, TypedDict
+from typing import TYPE_CHECKING, Optional, Tuple, TypedDict
 from uuid import UUID
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest
@@ -29,6 +29,8 @@ class KCHManagerMessage(ManagerMessage):
 
     Published to astoria/kchd
     """
+
+    kch: Optional[KCHInfo] = None
 
 
 class KCHLEDUpdateManagerRequest(ManagerRequest):

@@ -5,10 +5,19 @@ from typing import Dict
 
 from astoria.common.components import StateManager
 
-from kchd.hardware import KCHLED
-
-from .controllers import SystemStatusController
-from .types import ControllerDictionary, KCHManagerMessage
+from .controllers import (
+    AstmetadController,
+    AstprocdController,
+    MQTTRequestController,
+    SystemStatusController,
+)
+from .gpio import GPIOController
+from .hardware import KCHLED
+from .types import (
+    ControllerDictionary,
+    KCHLEDUpdateManagerRequest,
+    KCHManagerMessage,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -20,10 +29,20 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
 
     def _init(self) -> None:
         self._lock = asyncio.Lock()
+        self._gpio = GPIOController()
 
         self._controllers: ControllerDictionary = {
+            "astmetad": AstmetadController(self._mqtt, self.update_leds),
+            "astprocd": AstprocdController(self._mqtt, self.update_leds),
+            "mqtt": MQTTRequestController(self._mqtt, self.update_leds),
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }
+
+        self._register_request(
+            "user_leds",
+            KCHLEDUpdateManagerRequest,
+            self._controllers["mqtt"].handle_led_update,
+        )
 
     async def main(self) -> None:
         """Main loop and entrypoint."""
@@ -56,18 +75,21 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
                     )
                 state.update(partial_state)
             LOGGER.debug(f"Current state: {state}")
+            self._gpio.set_state(state)
 
     async def _pre_connect(self) -> None:
         """Before connecting to MQTT, we turn on 60% boot."""
         LOGGER.info("kchd is live.")
         self._controllers["status"].kchd_running = True
         await self.update_leds()
+        await asyncio.sleep(0.1)
 
     async def _post_connect(self) -> None:
         """After connecting to MQTT, we turn on 80% boot."""
         LOGGER.info("Connected to Event Broker")
         self._controllers["status"].mqtt_up = True
         await self.update_leds()
+        await asyncio.sleep(0.1)
 
     async def _post_disconnect(self) -> None:
         """Before connecting to MQTT, we turn on 60% boot."""

@@ -1,9 +1,15 @@
 """Type definitions."""
-from typing import TypedDict
+from typing import TYPE_CHECKING, Tuple, TypedDict
 
-from astoria.common.ipc import ManagerMessage
+from astoria.common.ipc import ManagerMessage, ManagerRequest
 
-from .controllers import SystemStatusController
+if TYPE_CHECKING:
+    from .controllers import (
+        AstmetadController,
+        AstprocdController,
+        MQTTRequestController,
+        SystemStatusController,
+    )
 
 
 class KCHManagerMessage(ManagerMessage):
@@ -14,6 +20,15 @@ class KCHManagerMessage(ManagerMessage):
     """
 
 
+class KCHLEDUpdateManagerRequest(ManagerRequest):
+    """A request to change the controllable LEDs."""
+
+    start: bool = False
+    a: Tuple[bool, bool, bool] = (False, False, False)
+    b: Tuple[bool, bool, bool] = (False, False, False)
+    c: Tuple[bool, bool, bool] = (False, False, False)
+
+
 class ControllerDictionary(TypedDict):
     """
     The dictionary of LED Controllers.
@@ -22,4 +37,7 @@ class ControllerDictionary(TypedDict):
     all of these are a subclass of LEDController.
     """
 
-    status: SystemStatusController
+    astmetad: 'AstmetadController'
+    astprocd: 'AstprocdController'
+    mqtt: 'MQTTRequestController'
+    status: 'SystemStatusController'

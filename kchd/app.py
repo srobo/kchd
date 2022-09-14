@@ -13,6 +13,7 @@ from .controllers import (
 )
 from .gpio import GPIOController
 from .hardware import KCHLED
+from .rpi import get_kch_info
 from .types import (
     ControllerDictionary,
     KCHLEDUpdateManagerRequest,
@@ -28,6 +29,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
     name = "kchd"
 
     def _init(self) -> None:
+        self._kch_info = get_kch_info()
         self._lock = asyncio.Lock()
         self._gpio = GPIOController()
 

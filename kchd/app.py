@@ -39,8 +39,8 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }
 
-        leds = set().union(*[
-            controller.leds  # type: ignore[attr-defined]
+        leds = set([
+            led for led in controller.leds  # type: ignore[attr-defined]
             for controller in self._controllers.values()
         ])
         self._gpio = GPIOController(leds)

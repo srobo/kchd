@@ -39,6 +39,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }
 
+        # Create a flattened, unique list of all leds used by all controllers
         leds = {
             led
             for controller in self._controllers.values()

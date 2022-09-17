@@ -86,7 +86,7 @@ class SystemStatusController(LEDController):
         return len(self._seen_services) == len(self._required_services)
 
     def get_enabled_leds(self) -> Tuple[bool, bool, bool]:
-        """Get the number of LEDs that should be enabled."""
+        """Get the state of each LED controlled by this class."""
         return (
             self.kchd_running,
             self.mqtt_up,
@@ -95,4 +95,5 @@ class SystemStatusController(LEDController):
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""
+        # Pair each led to it's state
         return dict(zip(self.leds, self.get_enabled_leds()))

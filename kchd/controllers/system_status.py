@@ -33,8 +33,7 @@ class SystemStatusController(LEDController):
     """
 
     leds = [
-        KCHLED.BOOT_20,
-        KCHLED.BOOT_40,
+        # The first 2 LEDs are externally controlled
         KCHLED.BOOT_60,
         KCHLED.BOOT_80,
         KCHLED.BOOT_100,
@@ -97,7 +96,7 @@ class SystemStatusController(LEDController):
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""
-        leds_on = self.get_enabled_leds() + 2
+        leds_on = self.get_enabled_leds()
         return {
             led: leds_on >= i + 1
             for i, led in enumerate(self.leds)

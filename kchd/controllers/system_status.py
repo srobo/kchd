@@ -87,11 +87,11 @@ class SystemStatusController(LEDController):
 
     def get_enabled_leds(self) -> Tuple[bool, bool, bool]:
         """Get the number of LEDs that should be enabled."""
-        return [
+        return (
             self.kchd_running,
             self.mqtt_up,
             self.astoria_good,
-        ]
+        )
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""

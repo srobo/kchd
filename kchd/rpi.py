@@ -37,7 +37,6 @@ def get_kch_info(*, sys_path: Path = DEVICE_TREE_SYS_PATH) -> KCHInfo:
             vendor=vendor,
             product=product,
             asset_code=_read_file(sys_path / "custom_0"),
-            uuid=_read_file(sys_path / "uuid"),
         )
     else:
         raise NoKCHException("A HAT is fitted, but it is not a KCH.")

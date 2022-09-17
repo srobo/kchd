@@ -95,5 +95,4 @@ class SystemStatusController(LEDController):
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""
-        leds_on = self.get_enabled_leds()
         return dict(zip(self.leds, self.get_enabled_leds()))

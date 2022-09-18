@@ -15,7 +15,6 @@ class GPIOController:
 
         atexit.register(GPIO.cleanup)
         GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)  # Ignore that the BOOT_20 and BOOT_40 LEDs were in use.
 
         GPIO.setup([led.value for led in self._leds], GPIO.OUT, initial=GPIO.LOW)
 

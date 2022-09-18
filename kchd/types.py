@@ -1,6 +1,5 @@
 """Type definitions."""
 from typing import TYPE_CHECKING, Optional, Tuple, TypedDict
-from uuid import UUID
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest
 from pydantic import BaseModel
@@ -20,7 +19,6 @@ class KCHInfo(BaseModel):
     vendor: str
     product: str
     asset_code: str
-    uuid: UUID
 
 
 class KCHManagerMessage(ManagerMessage):

@@ -2,7 +2,7 @@
 
 import logging
 from json import JSONDecodeError, loads
-from typing import Callable, Coroutine, Dict, Match, Set
+from typing import Callable, Coroutine, Dict, Match, Set, Tuple
 
 from astoria.common.ipc import ManagerMessage
 from astoria.common.mqtt.wrapper import MQTTWrapper
@@ -33,8 +33,7 @@ class SystemStatusController(LEDController):
     """
 
     leds = [
-        KCHLED.BOOT_20,
-        KCHLED.BOOT_40,
+        # The first 2 LEDs are externally controlled
         KCHLED.BOOT_60,
         KCHLED.BOOT_80,
         KCHLED.BOOT_100,
@@ -86,19 +85,15 @@ class SystemStatusController(LEDController):
         """Determine whether astoria services are in a good state."""
         return len(self._seen_services) == len(self._required_services)
 
-    def get_enabled_leds(self) -> int:
-        """Get the number of LEDs that should be enabled."""
-        led_factors = [
+    def get_enabled_leds(self) -> Tuple[bool, bool, bool]:
+        """Get the state of each LED controlled by this class."""
+        return (
             self.kchd_running,
             self.mqtt_up,
             self.astoria_good,
-        ]
-        return sum([1 for factor in led_factors if factor])
+        )
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""
-        leds_on = self.get_enabled_leds() + 2
-        return {
-            led: leds_on >= i + 1
-            for i, led in enumerate(self.leds)
-        }
+        # Pair each led to it's state
+        return dict(zip(self.leds, self.get_enabled_leds()))

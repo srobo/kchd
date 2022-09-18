@@ -10,8 +10,8 @@ class KCHLED(enum.IntEnum):
     The value of each LED in the Enum is the BCM pin number.
     """
 
-    BOOT_20 = 7
-    BOOT_40 = 5
+    # BOOT_20 = 7  # Controlled by hat EEPROM GPIO map
+    # BOOT_40 = 5  # Controlled by systemd
     BOOT_60 = 12
     BOOT_80 = 6
     BOOT_100 = 13
@@ -19,7 +19,7 @@ class KCHLED(enum.IntEnum):
     CODE = 11
     COMP = 16
 
-    HEARTBEAT = 19
+    # HEARTBEAT = 19  # Controlled by hat EEPROM device tree
 
     STATUS_RED = 26
     STATUS_GREEN = 20

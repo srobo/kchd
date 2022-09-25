@@ -13,7 +13,6 @@ from .controllers import (
 )
 from .driver import get_driver
 from .hardware import KCHLED
-from .rpi import get_kch_info
 from .types import (
     ControllerDictionary,
     KCHLEDUpdateManagerRequest,
@@ -29,7 +28,6 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
     name = "kchd"
 
     def _init(self) -> None:
-        self._kch_info = get_kch_info()
         self._lock = asyncio.Lock()
 
         self._controllers: ControllerDictionary = {
@@ -46,6 +44,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             for led in controller.leds  # type: ignore[attr-defined]
         }
         self._setup_driver()
+        self._kch_info = self._driver.get_kch_info()
 
         self._register_request(
             "user_leds",

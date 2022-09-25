@@ -1,14 +1,16 @@
-"""Control the GPIO."""
+"""Control the LEDs using the RPi GPIO."""
 import atexit
 from typing import Dict, Set
 
 import RPi.GPIO as GPIO
 
-from .hardware import KCHLED
+from kchd.hardware import KCHLED
+
+from .driver import LEDDriver
 
 
-class GPIOController:
-    """Implementation of hardware LEDs."""
+class GPIODriver(LEDDriver):
+    """Control the LEDs using the RPi GPIO."""
 
     def __init__(self, leds: Set[KCHLED]) -> None:
         self._leds = leds

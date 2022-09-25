@@ -11,7 +11,7 @@ from .controllers import (
     MQTTRequestController,
     SystemStatusController,
 )
-from .gpio import GPIOController
+from .driver import get_driver
 from .hardware import KCHLED
 from .rpi import get_kch_info
 from .types import (
@@ -40,18 +40,22 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
         }
 
         # Create a flattened, unique set of all leds used by all controllers
-        leds = {
+        self._leds = {
             led
             for controller in self._controllers.values()
             for led in controller.leds  # type: ignore[attr-defined]
         }
-        self._gpio = GPIOController(leds)
+        self._setup_driver()
 
         self._register_request(
             "user_leds",
             KCHLEDUpdateManagerRequest,
             self._controllers["mqtt"].handle_led_update,
         )
+
+    def _setup_driver(self) -> None:
+        """Setup the LED Driver."""
+        self._driver = get_driver(self._leds)
 
     async def main(self) -> None:
         """Main loop and entrypoint."""
@@ -85,7 +89,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
                     )
                 state.update(partial_state)
             LOGGER.debug(f"Current state: {state}")
-            self._gpio.set_state(state)
+            self._driver.set_state(state)
 
     async def _pre_connect(self) -> None:
         """Before connecting to MQTT, we turn on 60% boot."""

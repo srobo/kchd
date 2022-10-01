@@ -66,11 +66,11 @@ class SystemStatusController(LEDController):
                 manager_name = match.group(1)
                 manager_message = parse_obj_as(ManagerMessage, data)
                 if manager_name in self._required_services:
-                    if manager_message.status is ManagerMessage.Status.RUNNING:
+                    if manager_message.status is ManagerMessage.Status.RUNNING and manager_name not in self._seen_services:
                         LOGGER.info(f"{manager_name} is running.")
                         self._seen_services |= {manager_name}
-                    else:
-                        LOGGER.info(f"{manager_name} is stopped.")
+                    elif manager_name in self._seen_services:
+                        LOGGER.info(f"{manager_name} has stopped.")
                         self._seen_services -= {manager_name}
                     await self._update_coro()
             except ValidationError:

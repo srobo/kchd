@@ -9,6 +9,31 @@ This program runs on the robot during student development and competitions and c
 [rpi]: https://raspberrypi.org
 [srobo]: https://studentrobotics.org
 
+## Why does this exist?
+
+The new KCH HAT that we're shipping with our brain boards have a number of LEDs on it, some of which are to indicate the state of the robot and some are user controlled.
+
+### Controlling the State LEDs
+
+The "state" of the robot is more specifically the state of the various state managers in our Astoria robot management system. Astoria handles events (such as a USB stick insertion) and publishes the information onto an MQTT event broker. In order to control the LEDs, we need to subscribe to the state messages on the event broker and set the LEDs appropriately when the state changes. This is implemented in a new daemon called kchd. If it were not exclusive to the SR kits, kchd would properly be part of Astoria.
+
+### Controlling the User LEDs
+
+At an initial glance, it would seem that we can drive the user LEDs directly from sr.robot3. Whilst we don't run usercode as root, we can configure permissions so that the usercode can control GPIO. However, we are unable to grant permissions at a level any more granular than this, usercode can control all of the GPIO or none. So that the debug LEDs on the HAT are actually reliably useful, we have intentionally chosen to restrict the usercode from controlling any of the user LEDs, instead controlling them via kchd.
+
+This reason alone is perhaps not enough to introduce inter-process communication into toggling some LEDs, although it is also not the only reason that we need the user LEDs to be managed externally.
+
+### Handling LEDs when Usercode exits
+
+Typically, when a program controlling GPIO exits it is good practise to cleanup the GPIO so that it is available to other programs. This tends to result in the GPIO being turned off when it is reset. This is very much not desirable behaviour if we turn off the user LEDs when the usercode exits.
+
+In fact the behaviour we want to see is:
+
+- When usercode exits, the state of the user LEDs stays exactly the same.
+- When the usercode USB is removed OR the usercode restarts, the User LEDs reset to be off.
+
+This behaviour is only achievable using an external daemon as we need to listen to Astoria state messages to turn off the LEDs at the right time.
+
 ## LED Groups
 
 There are 22 LEDs on the KCH that are connected to GPIO pins on the Raspberry Pi.

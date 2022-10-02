@@ -8,6 +8,7 @@ from astoria.common.components import StateManager
 from .controllers import (
     AstmetadController,
     AstprocdController,
+    AstwifidController,
     MQTTRequestController,
     SystemStatusController,
 )
@@ -35,6 +36,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
         self._controllers: ControllerDictionary = {
             "astmetad": AstmetadController(self._mqtt, self.update_leds),
             "astprocd": AstprocdController(self._mqtt, self.update_leds),
+            "astwifid": AstwifidController(self._mqtt, self.update_leds),
             "mqtt": MQTTRequestController(self._mqtt, self.update_leds),
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }

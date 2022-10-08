@@ -16,6 +16,8 @@ from .driver import get_driver
 from .hardware import KCHLED
 from .types import (
     ControllerDictionary,
+    NoKCHException,
+    KCHInfo,
     KCHLEDUpdateManagerRequest,
     KCHManagerMessage,
 )
@@ -46,7 +48,13 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             for led in controller.leds  # type: ignore[attr-defined]
         }
         self._setup_driver()
-        self._kch_info = self._driver.get_kch_info()
+        try:
+            self._kch_info = self._driver.get_kch_info()
+        except NoKCHException as e:
+            LOGGER.exception(e)
+            self._kch_info = KCHInfo(
+                vendor="Student Robotics", product="No KCH", asset_code="SR0000",
+            )
 
         self._register_request(
             "user_leds",

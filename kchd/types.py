@@ -32,7 +32,7 @@ class KCHManagerMessage(ManagerMessage):
 
     Published to astoria/kchd
     """
-
+    kchd_version: str
     kch: Optional[KCHInfo] = None
 
 

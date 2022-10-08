@@ -47,14 +47,18 @@ class AstmetadController(LEDController):
             try:
                 data = loads(payload)
                 manager_message = parse_obj_as(MetadataManagerMessage, data)
-                self._mode = manager_message.metadata.mode
-                await self._update_coro()
-            except ValidationError:
-                LOGGER.warning("Received bad manager message.")
-            except JSONDecodeError:
-                LOGGER.warning("Received bad JSON in manager message.")
+                if manager_message.metadata.mode != self._mode:
+                    self._mode = manager_message.metadata.mode
+                    LOGGER.info(f"Robot Mode has changed to {self._mode}")
+                    await self._update_coro()
+            except ValidationError as e:
+                LOGGER.warning("Received bad manager message from astmetad.")
+                LOGGER.warning(str(e))
+            except JSONDecodeError as e:
+                LOGGER.warning("Received bad JSON in astmetad manager message.")
+                LOGGER.warning(str(e))
         else:
-            LOGGER.warning("Received empty manager message.")
+            LOGGER.warning("Received empty manager message from astmetad.")
 
     def get_state(self) -> Dict[KCHLED, bool]:
         """Get the state of controlled LEDs."""

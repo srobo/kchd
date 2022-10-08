@@ -22,11 +22,16 @@ from .types import (
 
 LOGGER = logging.getLogger(__name__)
 
+__version__ = "0.2.0"
 
 class KCHDaemon(StateManager[KCHManagerMessage]):
     """KCH LED Controller Daemon."""
 
     name = "kchd"
+
+    def _setup_logging(self, verbose: bool, *, welcome_message: bool = True) -> None:
+        super()._setup_logging(verbose, welcome_message=False)
+        LOGGER.info(f"kchd - v{__version__}")
 
     def _init(self) -> None:
         self._lock = asyncio.Lock()
@@ -45,8 +50,16 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             for controller in self._controllers.values()
             for led in controller.leds  # type: ignore[attr-defined]
         }
+        LOGGER.info(
+            f"{len(self._leds)} LEDs selected from {len(self._controllers)} controllers",
+        )
+
         self._setup_driver()
         self._kch_info = self._driver.get_kch_info()
+
+        driver_name = self._driver.__class__.__name__
+        LOGGER.info(f"{driver_name} has been selected as the driver.")
+        LOGGER.info(f"KCH Found: {self._kch_info}")
 
         self._register_request(
             "user_leds",
@@ -61,6 +74,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
     async def main(self) -> None:
         """Main loop and entrypoint."""
         self.status = KCHManagerMessage(
+            kchd_version=__version__,
             status=KCHManagerMessage.Status.RUNNING,
             kch=self._kch_info,
         )
@@ -75,6 +89,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
         on this data go into a safe state.
         """
         return KCHManagerMessage(
+            kchd_version=__version__,
             status=KCHManagerMessage.Status.STOPPED,
         )
 
@@ -94,7 +109,7 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
 
     async def _pre_connect(self) -> None:
         """Before connecting to MQTT, we turn on 60% boot."""
-        LOGGER.info("kchd is live.")
+        LOGGER.info("Ready.")
         self._controllers["status"].kchd_running = True
         await self.update_leds()
         await asyncio.sleep(0.1)
@@ -107,5 +122,5 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
         await asyncio.sleep(0.1)
 
     async def _post_disconnect(self) -> None:
-        """Before connecting to MQTT, we turn on 60% boot."""
+        """Log that we have disconnected from the broker."""
         LOGGER.info("Disconnecting, turn off all LEDs.")

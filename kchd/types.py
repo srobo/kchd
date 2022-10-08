@@ -14,6 +14,10 @@ if TYPE_CHECKING:
     )
 
 
+class NoKCHException(Exception):
+    """There is no KCH on the Pi."""
+
+
 class KCHInfo(BaseModel):
     """Information about the KCH."""
 

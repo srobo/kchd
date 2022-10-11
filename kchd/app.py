@@ -16,10 +16,10 @@ from .driver import get_driver
 from .hardware import KCHLED
 from .types import (
     ControllerDictionary,
-    NoKCHException,
     KCHInfo,
     KCHLEDUpdateManagerRequest,
     KCHManagerMessage,
+    NoKCHException,
 )
 
 LOGGER = logging.getLogger(__name__)

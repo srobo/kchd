@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kchd"
-version = "0.2.0"
+version = "0.3.0"
 description = "KCH LED Daemon"
 authors = ["Dan Trickey <dtrickey@studentrobotics.org>"]
 

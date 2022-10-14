@@ -9,7 +9,6 @@ if TYPE_CHECKING:
         AstmetadController,
         AstprocdController,
         AstwifidController,
-        MQTTRequestController,
         SystemStatusController,
     )
 

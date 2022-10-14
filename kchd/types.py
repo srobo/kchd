@@ -56,5 +56,4 @@ class ControllerDictionary(TypedDict):
     astmetad: 'AstmetadController'
     astprocd: 'AstprocdController'
     astwifid: 'AstwifidController'
-    mqtt: 'MQTTRequestController'
     status: 'SystemStatusController'

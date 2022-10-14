@@ -16,7 +16,6 @@ from .hardware import KCHLED
 from .types import (
     ControllerDictionary,
     KCHInfo,
-    KCHLEDUpdateManagerRequest,
     KCHManagerMessage,
     NoKCHException,
 )

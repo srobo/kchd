@@ -9,7 +9,6 @@ if TYPE_CHECKING:
         AstmetadController,
         AstprocdController,
         AstwifidController,
-        MQTTRequestController,
         SystemStatusController,
     )
 
@@ -56,5 +55,4 @@ class ControllerDictionary(TypedDict):
     astmetad: 'AstmetadController'
     astprocd: 'AstprocdController'
     astwifid: 'AstwifidController'
-    mqtt: 'MQTTRequestController'
     status: 'SystemStatusController'

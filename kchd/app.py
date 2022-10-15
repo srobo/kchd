@@ -9,7 +9,6 @@ from .controllers import (
     AstmetadController,
     AstprocdController,
     AstwifidController,
-    MQTTRequestController,
     SystemStatusController,
 )
 from .driver import get_driver
@@ -17,7 +16,6 @@ from .hardware import KCHLED
 from .types import (
     ControllerDictionary,
     KCHInfo,
-    KCHLEDUpdateManagerRequest,
     KCHManagerMessage,
     NoKCHException,
 )
@@ -37,7 +35,6 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             "astmetad": AstmetadController(self._mqtt, self.update_leds),
             "astprocd": AstprocdController(self._mqtt, self.update_leds),
             "astwifid": AstwifidController(self._mqtt, self.update_leds),
-            "mqtt": MQTTRequestController(self._mqtt, self.update_leds),
             "status": SystemStatusController(self._mqtt, self.update_leds),
         }
 
@@ -55,12 +52,6 @@ class KCHDaemon(StateManager[KCHManagerMessage]):
             self._kch_info = KCHInfo(
                 vendor="Student Robotics", product="No KCH", asset_code="SR0000",
             )
-
-        self._register_request(
-            "user_leds",
-            KCHLEDUpdateManagerRequest,
-            self._controllers["mqtt"].handle_led_update,
-        )
 
     def _setup_driver(self) -> None:
         """Setup the LED Driver."""

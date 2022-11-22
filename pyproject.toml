@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "kchd"
-version = "0.4.0"
+version = "0.4.1"
 description = "KCH LED Daemon"
 authors = ["Dan Trickey <dtrickey@studentrobotics.org>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-astoria = "^0.10.0"
+astoria = "^0.11.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
